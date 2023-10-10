@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import musicplayer.members.AccountList;
 import musicplayer.members.User;
 import playlist.Playlist;
 import songs.Song;
@@ -16,6 +17,7 @@ public class MusicPlayerMain {
 	// call user class
 	static User user;
 	static Playlist playlist;
+	static AccountList accountList;
 
 	// create thread to insert pauses
 	static Thread thread = new Thread();
@@ -140,6 +142,7 @@ public class MusicPlayerMain {
 		
 		// save user info
 		user = new User(name, username, password, email);
+		user.saveAccountDetailsToFile();
 		System.out.println("[Account creation complete]");
 		Thread.sleep(750);
 
@@ -148,6 +151,7 @@ public class MusicPlayerMain {
 	}
 	
 	public static void signIn() throws InterruptedException{
+		accountList = new AccountList(new ArrayList<String>());
 		System.out.println("---------------------------------------------------------");
 		System.out.println("\t\t      [Sign in]");
 		System.out.println("---------------------------------------------------------");
@@ -165,15 +169,16 @@ public class MusicPlayerMain {
 			System.out.println("Enter password: ");
 			String password = scan.nextLine();
 			
-			// if input matches id/pw, set isLoggedIn to true and exit loop
+			// if input matches id/pw, checkLogin returns true, exits loop
 			try {
-				if(username.equals(user.getUsername()) && password.equals(user.getPassword())) { 			
+				if(accountList.checkLogin(username, password)) {
 					System.out.println("Login successful");
 					Thread.sleep(750);
 					user.setLoggedIn(true);
 					close = true;
-					break;
-				}				
+					break;					
+				}
+			// if no accounts have been made, catches NullPointerException
 			} catch(NullPointerException e) {
 				System.out.println("Error: please create an account first");
 				Thread.sleep(1000);
@@ -182,7 +187,7 @@ public class MusicPlayerMain {
 				close = true;
 				break;
 			}
-			
+			// if login failed, try again
 			System.out.println("Username and password do not match. Please try again\n"
 					+ "(Enter 'x' to return to login menu)");
 		}
@@ -190,7 +195,6 @@ public class MusicPlayerMain {
 	
 	// main menu: (add, remove song, display playlist, shuffle, user info, logout, close program
 	public static int displayMainMenu() throws InterruptedException{
-		
 		System.out.println("---------------------------------------------------------");	
 		System.out.printf("\tHello, %s! Welcome to Music Player%n", user.getName());
 		System.out.println("---------------------------------------------------------");
@@ -232,13 +236,13 @@ public class MusicPlayerMain {
 	
 	private static void viewPlaylist() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
-		System.out.printf("   Displaying %n's playlist", user.getName());
+		System.out.printf("\tDisplaying %s's playlist%n", user.getName());
 		System.out.println("---------------------------------------------------------");
-		Thread.sleep(500);
+		enterToReturn();
 	}
 	private static void shufflePlaylist() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
-		System.out.println("   Shuffle playlist");
+		System.out.println("\t\t   Shuffle playlist");
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
 		System.out.println("Would  you like to shuffle your playlist? Y | N");
@@ -247,13 +251,12 @@ public class MusicPlayerMain {
 			// CODE TO SHUFFLE PLAYLIST
 			System.out.println("Your playlist has been shuffled");
 		}
-		Thread.sleep(1000);
-		System.out.println("Returning to main menu...");
+		enterToReturn();
 	}
 	
 	private static void addSong() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
-		System.out.println("   Add song to playlist");
+		System.out.println("\t\t  Add song to playlist");
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
 		// CODE TO ADD SONG
@@ -261,7 +264,7 @@ public class MusicPlayerMain {
 	
 	private static void removeSong() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
-		System.out.println("   Remove song from playlist");
+		System.out.println("\t\tRemove song from playlist");
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
 		// CODE TO REMOVE SONG
@@ -275,11 +278,14 @@ public class MusicPlayerMain {
 		System.out.printf("Name: %s%n", user.getName());
 		System.out.printf("Username: %s%n", user.getUsername());
 		System.out.printf("Email: %s%n", user.getEmail());
+		enterToReturn();
+	}
+	
+	private static void enterToReturn() throws InterruptedException {
 		Thread.sleep(500);
 		System.out.println("[Enter any key to return to main menu]");
 		scan.nextLine();
 		System.out.println("Returning to main menu...");
 		Thread.sleep(1000);
 	}
-	
 }
