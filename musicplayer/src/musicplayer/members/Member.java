@@ -65,5 +65,9 @@ public class Member {
 	public void setLoggedIn(boolean isLoggedIn) {
 		this.isLoggedIn = isLoggedIn;
 	}
-
+	
+	@Override
+	public String toString() {
+		return password;
+	}
 }

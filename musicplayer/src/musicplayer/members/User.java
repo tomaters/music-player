@@ -4,7 +4,15 @@ import java.util.ArrayList;
 
 public class User extends Member {
 
-	private ArrayList<String> accountDetails = new ArrayList<String>();
+	// object to save account information
+	private ArrayList<String> accountDetailsArrayList = new ArrayList<String>();
+	
+	// object to save account into HashMap for login
+	private AccountList accountList = new AccountList(accountDetailsArrayList);
+	
+	public User() {
+		super();
+	}
 	
 	public User(String name, String email) {
 		super(name, email);
@@ -13,15 +21,14 @@ public class User extends Member {
 	public User(String name, String username, String password, String email) {
 		super(name, username, password, email);
 		// add details to accountDetails
-		accountDetails.add(name);
-		accountDetails.add(username);
-		accountDetails.add(password);
-		accountDetails.add(email);
+		accountDetailsArrayList.add(name);
+		accountDetailsArrayList.add(username);
+		accountDetailsArrayList.add(password);
+		accountDetailsArrayList.add(email);
 	}
-	// method to upload details to file
-	public void saveAccountDetailsToFile() {
-		AccountList accountList = new AccountList(accountDetails);
-		accountList.writeAccountDetails(accountDetails);		
+	
+	public void writeArrayToFile() {
+		accountList.writeAccountDetails(accountDetailsArrayList);			
 	}
 	
 }

@@ -25,9 +25,12 @@ public class MusicPlayerMain {
 	public static void main(String[] args) throws InterruptedException {
 
 		// initial variables
-
 		ArrayList<Song> userPlaylist = new ArrayList<Song>();
 		boolean close = false;
+
+		// load account data from text file
+		accountList = new AccountList(new ArrayList<String>());
+		accountList.uploadSavedAccounts();
 		
 		// begin loop
 		while(!close) {
@@ -43,10 +46,11 @@ public class MusicPlayerMain {
 					
 			// login
 			case 2: signIn(); 
+				// prevent NullPointerException if user has not been made
+			try {
 				if(user.isLoggedIn()) {
 					// will return a number between 1 and 7				
 					boolean mainClose = false;
-					
 					// main menu after logging in
 					while(!mainClose) {
 						int mainInput = displayMainMenu();
@@ -84,16 +88,17 @@ public class MusicPlayerMain {
 							
 							// logout (return to login menu)
 						case 6: logout();
-							mainClose = true;
-							break;
-							
-							// close program from main menu
+						mainClose = true;
+						break;
+						
+						// close program from main menu
 						case 7:	close();
-							mainClose = true;
-							close = true;
+						mainClose = true;
+						close = true;
 						}		
 					}	
 				}
+			} catch (NullPointerException e) {}
 				break;
 					
 			// close program from login menu
@@ -125,7 +130,6 @@ public class MusicPlayerMain {
 	}
 
 	public static void createAccount() throws InterruptedException {
-		
 		System.out.println("---------------------------------------------------------");
 		System.out.println("\t\t   [Create account]");
 		// enter new user info
@@ -142,7 +146,8 @@ public class MusicPlayerMain {
 		
 		// save user info
 		user = new User(name, username, password, email);
-		user.saveAccountDetailsToFile();
+		user.writeArrayToFile();
+		accountList.addAccountToMap(username, user);
 		System.out.println("[Account creation complete]");
 		Thread.sleep(750);
 
@@ -151,7 +156,6 @@ public class MusicPlayerMain {
 	}
 	
 	public static void signIn() throws InterruptedException{
-		accountList = new AccountList(new ArrayList<String>());
 		System.out.println("---------------------------------------------------------");
 		System.out.println("\t\t      [Sign in]");
 		System.out.println("---------------------------------------------------------");
@@ -174,12 +178,16 @@ public class MusicPlayerMain {
 				if(accountList.checkLogin(username, password)) {
 					System.out.println("Login successful");
 					Thread.sleep(750);
+					if(user == null) {
+						user = new User();
+					}
 					user.setLoggedIn(true);
 					close = true;
 					break;					
 				}
 			// if no accounts have been made, catches NullPointerException
 			} catch(NullPointerException e) {
+				e.printStackTrace();
 				System.out.println("Error: please create an account first");
 				Thread.sleep(1000);
 				System.out.println("Returning to login menu...");
@@ -190,13 +198,14 @@ public class MusicPlayerMain {
 			// if login failed, try again
 			System.out.println("Username and password do not match. Please try again\n"
 					+ "(Enter 'x' to return to login menu)");
+			System.out.println("---------------------------------------------------------");
 		}
 	}
 	
 	// main menu: (add, remove song, display playlist, shuffle, user info, logout, close program
 	public static int displayMainMenu() throws InterruptedException{
 		System.out.println("---------------------------------------------------------");	
-		System.out.printf("\tHello, %s! Welcome to Music Player%n", user.getName());
+		System.out.printf("\tHello, %s! Welcome to Music Player%n", accountList.getName());
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(1000);	
 		System.out.printf("[1] View playlist\t\t[5] View user info\n");
@@ -236,7 +245,7 @@ public class MusicPlayerMain {
 	
 	private static void viewPlaylist() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
-		System.out.printf("\tDisplaying %s's playlist%n", user.getName());
+		System.out.printf("\tDisplaying %s's playlist%n", accountList.getName());
 		System.out.println("---------------------------------------------------------");
 		enterToReturn();
 	}
@@ -275,9 +284,9 @@ public class MusicPlayerMain {
 		System.out.println("\t\tViewing user information");
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
-		System.out.printf("Name: %s%n", user.getName());
-		System.out.printf("Username: %s%n", user.getUsername());
-		System.out.printf("Email: %s%n", user.getEmail());
+		System.out.printf("Name: %s%n", accountList.getName());
+		System.out.printf("Username: %s%n", accountList.getUsername());
+		System.out.printf("Email: %s%n", accountList.getEmail());
 		enterToReturn();
 	}
 	
