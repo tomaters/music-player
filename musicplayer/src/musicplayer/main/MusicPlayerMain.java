@@ -14,10 +14,10 @@ public class MusicPlayerMain {
 	public static Scanner scan = new Scanner(System.in);
 	// number of available songs
 	static final int NUM_SONGS = 10;
-	// call user class
 	static User user;
 	static Playlist playlist;
 	static AccountList accountList;
+	static ArrayList<Song> songInfoList;
 
 	// create thread to insert pauses
 	static Thread thread = new Thread();
@@ -26,7 +26,6 @@ public class MusicPlayerMain {
 
 		// initial variables
 		boolean loginClose = false;
-
 		// load account data from text file
 		accountList = new AccountList(new ArrayList<String>());
 		accountList.uploadSavedAccounts();
@@ -218,6 +217,7 @@ public class MusicPlayerMain {
 		else System.out.println("Your playlist is empty");
 		enterToReturn();
 	}
+	
 	private static void shufflePlaylist() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
 		System.out.println("\t\t   Shuffle playlist");
@@ -237,6 +237,9 @@ public class MusicPlayerMain {
 		System.out.println("\t\t  Add song to playlist");
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
+		songInfoList = new ArrayList<Song>();
+		// view song list
+		playlist.displaySongList(songInfoList);
 		// CODE TO ADD SONG
 	}
 	

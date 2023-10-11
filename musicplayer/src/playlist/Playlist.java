@@ -43,6 +43,11 @@ public class Playlist implements PlaylistInterface {
 		return flag;
 	}
 
+	@Override
+	public String toString() {
+		return 
+	}
+	
 	// adds a song to the playlist and increases song count
 	@Override
 	public void addToPlaylist(Song song) {
