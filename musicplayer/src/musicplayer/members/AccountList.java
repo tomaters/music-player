@@ -47,6 +47,10 @@ public class AccountList extends Member {
 
 	// returns lineCount, the number of lines in accountlist.txt
 	public void lineCounter(){
+		// if file doesnt exist, create a new one
+		if(!new File("accountlist.txt").exists()) {
+			return;
+		} 
 		String file = "accountlist.txt"; // Replace with the path to your text file
 		
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file)) ) {
@@ -61,14 +65,13 @@ public class AccountList extends Member {
 	// take file and create accounts, to be processed at the beginning only
 	// all newly created accounts will be updated to accountListMap right away
 	public void uploadSavedAccounts() {
+		// if file doesnt exist, create a new one
+		if(!new File("accountlist.txt").exists()) {
+			return;
+		} 
 		// retrieve amount of lines in text file
 		lineCounter();
 		try {
-			// if file doesnt exist, create a new one
-			if(!new File("accountlist.txt").exists()) {
-				new File("accountlist.txt");
-				return;
-			} 
 			// create FileReader to read text file
 			FileReader fileReader = new FileReader("accountlist.txt");
 			// construct BufferedReader for improved performance
@@ -100,7 +103,6 @@ public class AccountList extends Member {
 	
 	// HashMap search key function
 	public boolean checkLogin(String username, String password) {
-		System.out.println("HashMap size: " + accountListMap.size());
 		boolean checkLogin = false;
 		// if username exists
 		if(accountListMap.containsKey(username)) {

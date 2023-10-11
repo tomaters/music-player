@@ -14,5 +14,5 @@ public interface PlaylistInterface {
 	
 	void removeFromPlaylist(int songIndex);
 	
-	void clearPlaylist();
+	void clearUserPlaylist();
 }

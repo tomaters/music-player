@@ -6,7 +6,7 @@ import songs.Song;
 
 public class Playlist implements PlaylistInterface {
 	
-	public ArrayList<Song> playlist = new ArrayList<Song>();
+	private ArrayList<Song> userPlaylist = new ArrayList<Song>();
 	public static int songCount = 0;
 	
 	// default constructor
@@ -35,8 +35,8 @@ public class Playlist implements PlaylistInterface {
 	public boolean isSongInPlaylist(String artist, String title) {
 		boolean flag = false;
 		
-		for(int i = 0; i < playlist.size(); i++) {
-			if(artist.equals(playlist.get(i).getArtist()) && title.equals(playlist.get(i).getTitle())) {
+		for(int i = 0; i < userPlaylist.size(); i++) {
+			if(artist.equals(userPlaylist.get(i).getArtist()) && title.equals(userPlaylist.get(i).getTitle())) {
 				flag = true;
 			}
 		}
@@ -46,30 +46,30 @@ public class Playlist implements PlaylistInterface {
 	// adds a song to the playlist and increases song count
 	@Override
 	public void addToPlaylist(Song song) {
-		playlist.add(song);
-		songCount = playlist.size();
+		userPlaylist.add(song);
+		songCount = userPlaylist.size();
 	}
 	
 	// adds a song to the playlist and decreases  song count
 	@Override
 	public void removeFromPlaylist(int songIndex) {
-		playlist.remove(songIndex);
-		songCount = playlist.size();
+		userPlaylist.remove(songIndex);
+		songCount = userPlaylist.size();
 	}
 	
 	// clears playlist and resets song count
 	@Override
-	public void clearPlaylist() {
-		playlist.clear();
+	public void clearUserPlaylist() {
+		userPlaylist.clear();
 		songCount = 0;
 	}
 
-	public ArrayList<Song> getPlaylist() {
-		return playlist;
+	public ArrayList<Song> getUserPlaylist() {
+		return userPlaylist;
 	}
 
-	public void setPlaylist(ArrayList<Song> playlist) {
-		this.playlist = playlist;
+	public void setUserPlaylist(ArrayList<Song> playlist) {
+		this.userPlaylist = playlist;
 	}
 
 	public static int getSongCount() {
@@ -80,5 +80,4 @@ public class Playlist implements PlaylistInterface {
 		Playlist.songCount = songCount;
 	}
 
-	
 }
