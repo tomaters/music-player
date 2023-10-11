@@ -1,18 +1,20 @@
 package playlist;
 
-import java.util.ArrayList;
-
-import songs.Song;
-
 public interface PlaylistInterface {
 
-	void displaySongList(ArrayList<Song> playlist);
+	void displaySongList() throws InterruptedException;
 	
-	boolean isSongInPlaylist(String artist, String title);
+	void showUserPlaylist();
 	
-	void addToPlaylist(Song song);
+	void showUserPlaylistWithID();
 	
-	void removeFromPlaylist(int songIndex);
+	boolean isSongInPlaylist(String addSongSelection);
+	
+	void addToPlaylist(String addsongSelection);
+	
+	void removeFromPlaylist(String removesongSelection);
 	
 	void clearUserPlaylist();
+	
+	void shufflePlaylist();
 }

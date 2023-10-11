@@ -1,21 +1,30 @@
 package songs;
 
 public class Song {
-
+	private String songID;
 	private String artist;
 	private String title;
 	private String releaseDate;
 	private String genre;
-	private int duration;
+	private String duration;
 	
 	public Song() {}
 	
-	public Song(String artist, String title, String releaseDate, String genre, int duration){
+	public Song(String songID, String artist, String title, String releaseDate, String genre, String duration){
+		this.songID = songID;
 		this.artist = artist;
 		this.title = title;
 		this.releaseDate = releaseDate;
 		this.genre = genre;
 		this.duration = duration;
+	}
+
+	public String getSongID() {
+		return songID;
+	}
+
+	public void setSongID(String songID) {
+		this.songID = songID;
 	}
 
 	public String getArtist() {
@@ -50,11 +59,11 @@ public class Song {
 		this.genre = genre;
 	}
 
-	public int getDuration() {
+	public String getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(String duration) {
 		this.duration = duration;
 	}
 	

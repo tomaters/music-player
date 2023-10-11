@@ -1,4 +1,4 @@
-1
-1
-1
-1
+myname
+username
+password
+email@address

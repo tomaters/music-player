@@ -8,6 +8,7 @@ import musicplayer.members.AccountList;
 import musicplayer.members.User;
 import playlist.Playlist;
 import songs.Song;
+import songs.SongList;
 
 public class MusicPlayerMain {
 	
@@ -15,23 +16,24 @@ public class MusicPlayerMain {
 	// number of available songs
 	static final int NUM_SONGS = 10;
 	static User user;
-	static Playlist playlist;
+	static Playlist playlist = new Playlist();
 	static AccountList accountList;
 	static ArrayList<Song> songInfoList;
-
+	static SongList songList;
 	// create thread to insert pauses
 	static Thread thread = new Thread();
+	// conditions to exit menu
+	static boolean closeLoginMenu = false;
+	static boolean closeMainMenu = false;
 	
 	public static void main(String[] args) throws InterruptedException {
 
-		// initial variables
-		boolean loginClose = false;
 		// load account data from text file
 		accountList = new AccountList(new ArrayList<String>());
 		accountList.uploadSavedAccounts();
 		
 		// begin loop
-		while(!loginClose) {
+		while(!closeLoginMenu) {
 			// login menu: create user, sign in, close program
 			int input = displayLoginMenu();
 			scan.nextLine(); 									// clear scanner buffer
@@ -41,11 +43,10 @@ public class MusicPlayerMain {
 				case 2: signIn(); 
 					// prevent NullPointerException if user has not been made
 				try {
-					if(user.isLoggedIn()) {
-						// will return a number between 1 and 7				
-						boolean mainClose = false;
+					if(accountList.isLoggedIn()) {
 						// main menu after logging in
-						while(!mainClose) {
+						while(!closeMainMenu) {
+							// will return a number between 1 and 8			
 							int mainInput = displayMainMenu();
 							scan.nextLine(); 						// clear scanner buffer
 							
@@ -54,18 +55,19 @@ public class MusicPlayerMain {
 								case 2: shufflePlaylist(); break; 	// shuffle playlist
 								case 3: addSong(); break; 			// add song
 								case 4: removeSong(); break;		// remove song
-								case 5:	viewUserInfo(); break;		// view user info
+								case 5: removeAllSongs(); break;	// remove all songs
+								case 6:	viewUserInfo(); break;		// view user info
 								// logout (return to login menu)
-								case 6: logout(); mainClose = true; break;
+								case 7: logout(); closeMainMenu = true; break;
 								// close program from main menu
-								case 7:	close(); mainClose = true; loginClose = true;
+								case 8:	close(); closeMainMenu = true; closeLoginMenu = true;
 							}		
 						}	
 					}
 				} catch (NullPointerException e) {}
 					break;
 				// close program from login menu
-				case 3:	loginClose = true; close(); return;
+				case 3:	closeLoginMenu = true; close(); return;
 			}			
 		}
 	}
@@ -148,13 +150,14 @@ public class MusicPlayerMain {
 			// if input matches id/pw, checkLogin returns true, exits loop
 			try {
 				if(accountList.checkLogin(username, password)) {
-					System.out.println("Login successful");
 					Thread.sleep(750);
 					// create user if there is none
 					if(user == null) {
 						user = new User();
 					}
-					user.setLoggedIn(true);
+					accountList.setLoggedIn(true);
+					closeMainMenu = false;
+					System.out.println("Login successful");
 					close = true;
 					break;					
 				}
@@ -173,15 +176,15 @@ public class MusicPlayerMain {
 		System.out.printf("\tHello, %s! Welcome to Music Player%n", accountList.getName());
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(1000);	
-		System.out.printf("[1] View playlist\t\t[5] View user info\n");
-		System.out.printf("[2] Shuffle playlist\t\t[6] Log out\n");
-		System.out.printf("[3] Add song to playlist\t[7] Close MusicPlayer\n");
-		System.out.printf("[4] Remove song from playlist\n");
+		System.out.printf("[1] View playlist\t\t[5] Remove all songs from playlist\n");
+		System.out.printf("[2] Shuffle playlist\t\t[6] View user info\n");
+		System.out.printf("[3] Add song to playlist\t[7] Log out\n");
+		System.out.printf("[4] Remove song from playlist\t[8] Close MusicPlayer\n");
 		while(true) {
 			try {
 				int input = scan.nextInt();
-				if(input < 1 || input > 7) {
-					System.out.println("Please enter a number between 1 and 7");
+				if(input < 1 || input > 8) {
+					System.out.println("Please enter a number between 1 and 8");
 					continue;
 				}
 				return input;
@@ -195,13 +198,14 @@ public class MusicPlayerMain {
 	
 	public static void logout() throws InterruptedException {
 		System.out.println("Logging out...");
-		user.setLoggedIn(false);
+		accountList.setLoggedIn(false);
 		Thread.sleep(1000);
 		System.out.println("Returning to login menu...");
 		Thread.sleep(1000);
 	}
 	
 	public static void close() throws InterruptedException {
+		System.out.println("---------------------------------------------------------");	
 		System.out.println("Thank you for using MusicPlayer");
 		Thread.sleep(1000);
 		System.out.println("[Program closed]");
@@ -213,7 +217,11 @@ public class MusicPlayerMain {
 		System.out.printf("\tDisplaying %s's playlist%n", accountList.getName());
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
-		if(playlist.getUserPlaylist().size() > 0) playlist.displaySongList(playlist.getUserPlaylist());
+		if(playlist.getUserPlaylist().size() > 0) {
+			playlist.showUserPlaylist();
+			System.out.println("---------------------------------------------------------");
+			System.out.printf("You have %d song(s) in your playlist%n", Playlist.getSongCount());
+		}
 		else System.out.println("Your playlist is empty");
 		enterToReturn();
 	}
@@ -223,24 +231,37 @@ public class MusicPlayerMain {
 		System.out.println("\t\t   Shuffle playlist");
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
-		System.out.println("Would  you like to shuffle your playlist? Y | N");
-		String input = scan.nextLine();
-		if(input.toLowerCase().equals("y")) {
-			// CODE TO SHUFFLE PLAYLIST
-			System.out.println("Your playlist has been shuffled");
-		}
+		if(playlist.getUserPlaylist().size() > 0) {
+			System.out.println("Would  you like to shuffle your playlist? Y | N");
+			String input = scan.nextLine();
+			if(input.toLowerCase().equals("y")) {
+				playlist.shufflePlaylist();
+				System.out.println("Your playlist has been shuffled");
+			}	
+			enterToReturn();
+			return;
+		} else { System.out.println("Your playlist is empty");
 		enterToReturn();
+		}
 	}
 	
 	private static void addSong() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
 		System.out.println("\t\t  Add song to playlist");
 		System.out.println("---------------------------------------------------------");
-		Thread.sleep(500);
-		songInfoList = new ArrayList<Song>();
+		Thread.sleep(1000);
 		// view song list
-		playlist.displaySongList(songInfoList);
-		// CODE TO ADD SONG
+		playlist.displaySongList();
+		System.out.println("---------------------------------------------------------");
+		System.out.println("Enter the Song ID that you would like to add to your playlist: ");
+		System.out.println("'X' to cancel");
+		String addSongSelection = scan.nextLine();
+		// x to cancel
+		if (!addSongSelection.toUpperCase().equals("X")){
+			// if not x, call method
+			playlist.addToPlaylist(addSongSelection);			
+		}
+		enterToReturn();
 	}
 	
 	private static void removeSong() throws InterruptedException {
@@ -248,8 +269,38 @@ public class MusicPlayerMain {
 		System.out.println("\t\tRemove song from playlist");
 		System.out.println("---------------------------------------------------------");
 		Thread.sleep(500);
-		// CODE TO REMOVE SONG
+		if(playlist.getUserPlaylist().size() > 0) {
+			playlist.showUserPlaylistWithID();
+			System.out.println("---------------------------------------------------------");
+			System.out.println("Enter the Song ID that you would like to remove from your playlist: ");
+			System.out.println("'X' to cancel");
+			String removeSongSelection = scan.nextLine();
+			// x to cancel
+			if (!removeSongSelection.toUpperCase().equals("X")){
+				// if not cancelled, call method to remove a song
+				playlist.removeFromPlaylist(removeSongSelection);			
+			} else { 
+				enterToReturn(); return;
+			}
+		}
+		// if playlist is already empty, exit
+		else System.out.println("Your playlist is empty");
+		enterToReturn();
 	}
+	
+	// remove all songs from playlist
+	private static void removeAllSongs() throws InterruptedException {
+		System.out.println("Would you like to remove all songs from your playlist? Y | N");
+		String input = scan.nextLine();
+		if(input.toUpperCase().trim().equals("Y")) {
+			playlist.clearUserPlaylist();
+			System.out.println("All songs have been removed from your playlist");
+			enterToReturn();
+			return;	
+		}
+		enterToReturn();
+	}
+	
 	// displays user information
 	private static void viewUserInfo() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
