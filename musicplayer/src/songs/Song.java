@@ -19,6 +19,7 @@ public class Song {
 		this.duration = duration;
 	}
 
+	// getters/setters
 	public String getSongID() {
 		return songID;
 	}
