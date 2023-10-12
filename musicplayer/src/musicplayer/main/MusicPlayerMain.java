@@ -288,19 +288,21 @@ public class MusicPlayerMain {
 			}
 		}
 		// if playlist is already empty, exit
-		else System.out.println("Your playlist is empty");
+		else System.out.println(" Your playlist is empty");
 		enterToReturn();
 	}
 	
 	// 5) remove all songs from playlist
 	private static void removeAllSongs() throws InterruptedException {
+		if(playlist.getUserPlaylist().size() == 0) {
+			System.out.println(" Your playlist is empty");
+			enterToReturn(); return;
+		}
 		System.out.println(" Would you like to remove all songs from your playlist? Y | N");
 		String input = scan.nextLine();
 		if(input.toUpperCase().trim().equals("Y")) {
 			playlist.clearUserPlaylist();
 			System.out.println(" All songs have been removed from your playlist");
-			enterToReturn();
-			return;	
 		}
 		enterToReturn();
 	}
@@ -335,7 +337,7 @@ public class MusicPlayerMain {
 		Thread.sleep(1000);
 	}
 	
-	// ADMIN MENU: login, add/remove songs from songList, delete account
+	// ADMIN MENU: login, add/remove songs from songList
 	private static void runAdminMenu() throws InterruptedException {
 		System.out.println("---------------------------------------------------------");	
 		System.out.println("\t\t  Administrator Login");
@@ -381,11 +383,11 @@ public class MusicPlayerMain {
 			System.out.println("---------------------------------------------------------");	
 			System.out.println("\t     Displaying Administrator Menu");
 			System.out.println("---------------------------------------------------------");
-			System.out.printf(" [1] Add a new song%n [2] Remove a song%n"
-					+ " [3] Delete an account%n [4] Log out%n");
+			System.out.printf(" [1] Add a new song%n [2] Remove a song (DEBUGGING)%n"
+					+ " [3] Log out%n");
 			try {
 				int input = scan.nextInt();			
-				if(input >= 1 && input <= 4) {
+				if(input >= 1 && input <= 3) {
 					scan.nextLine(); // clear scanner buffer
 					
 					switch(input) {
@@ -400,37 +402,21 @@ public class MusicPlayerMain {
 						}
 						enterToReturn(); break;						
 					case 2: 											// 2) remove song from songcatalogue
-						// show song list
-						System.out.println("---------------------------------------------------------");
-						System.out.println("\t\t[Admin] Remove a Song");
-						System.out.println("---------------------------------------------------------");
-						Thread.sleep(1000);
-						playlist.displaySongList();
-						System.out.println("---------------------------------------------------------");
-						Thread.sleep(500);
-						System.out.println(" Enter ID of song you would like to remove: ");
-						System.out.println(" 'X' to cancel");
-						String removeSongID = scan.nextLine();
-						if(removeSongID.toLowerCase().trim().equals("x")) {
-							enterToReturn(); break;
-						}
-							songList.removeSongFromFile(removeSongID); 
-							enterToReturn(); break;							
-					case 3: 											// 3) delete a user account
-						System.out.println("---------------------------------------------------------");
-						System.out.println("\t\t[Admin] Delete User Account");
-						System.out.println("---------------------------------------------------------");
-						Thread.sleep(300);
-						System.out.println(" Displaying user accounts...");
-						Thread.sleep(1000);;
-						accountList.displayAccountsList();
-						System.out.println("---------------------------------------------------------");
-						System.out.println(" Enter the username of the account you would like to delete: ");
-						System.out.println(" 'X' to Cancel");
-						String accountToRemove = scan.nextLine();
-						accountList.deleteUserAccount(accountToRemove);
-						enterToReturn(); break;										
-					case 4:												// 4) log out of Admin
+//						System.out.println("---------------------------------------------------------");
+//						System.out.println("\t\t[Admin] Remove a Song");
+//						System.out.println("---------------------------------------------------------");
+//						Thread.sleep(1000);
+//						playlist.displaySongList();
+//						System.out.println("---------------------------------------------------------");
+//						Thread.sleep(500);
+//						System.out.println(" Enter ID of song you would like to remove: ");
+//						System.out.println(" 'X' to cancel");
+//						String removeSongID = scan.nextLine();
+//						if(removeSongID.toLowerCase().trim().equals("x")) {
+//							enterToReturn(); break;
+//						}
+						enterToReturn(); break;							
+					case 3: 											// 3) log out of Admin
 						admin.setAdminLoggedIn(false); // returns to login menu
 						System.out.println(" Logged out of Administrator account");
 						Thread.sleep(500);
@@ -438,14 +424,14 @@ public class MusicPlayerMain {
 					}
 				} else {
 					Thread.sleep(200);
-					System.out.println(" Please enter a number between 1 and 4");	
+					System.out.println(" Please enter a number between 1 and 3");	
 					Thread.sleep(1000);
 				}
 			} catch(InputMismatchException e){
 				// clear scanner buffer
 				scan.nextLine();
 				Thread.sleep(200);
-				System.out.println(" Please enter a number between 1 and 4");
+				System.out.println(" Please enter a number between 1 and 3");
 				Thread.sleep(1000);
 			}			
 		}

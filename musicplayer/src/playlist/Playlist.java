@@ -6,17 +6,20 @@ import songs.Song;
 import songs.SongList;
 
 public class Playlist implements PlaylistInterface {
-	
+	// array to store songs into user playlist
 	private ArrayList<Song> userPlaylist = new ArrayList<Song>();
+	// number of songs in user playlist
 	public static int songCount = 0;
 	// create SongList object, not to be confused with HashMap songList in SongList class
-	private SongList _songList = new SongList();
+	private SongList _songList;
 	// default constructor
 	public Playlist() {}
 	
 	// prints list of songs to add with their properties
 	@Override
 	public void displaySongList() {
+		// updates amount of songs in songList into _songList so when one is added via Admin it comes up right
+		_songList = new SongList();
 		// reads songcatalogue.txt file and stores songs into songList HashMap
 		_songList.readSongFile();
 		// print available song list

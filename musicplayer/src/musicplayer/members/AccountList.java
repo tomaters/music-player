@@ -115,17 +115,4 @@ public class AccountList extends Member {
 		}
 		return checkLogin;
 	}
-
-	// view all users' account info (username, name, email); for Admin function 
-	public void displayAccountsList() { //아직 작업중
-//		for (User user : accountListMap.get().values()) {
-//		        System.out.printf("Song ID: [%-4s]  Artist: %-16s Song title: %-24s Release date: %-5s Genre: %-8s Duration: %-10s%n",
-//		                song.getSongID(), song.getArtist(), song.getTitle(), song.getReleaseDate(), song.getGenre(), song.getDuration());
-//		}			
-	}
-
-	public void deleteUserAccount(String accountToRemove) { // 아직 작업중
-		// CODE TO REMOVE USER ACCOUNT
-		// REMOVE FROM HASHMAP AND FROM TEXT FILE
-	}
 }

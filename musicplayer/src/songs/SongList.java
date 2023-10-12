@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+// import java.util.Iterator;
 import java.util.Scanner;
 
 public class SongList {
@@ -34,7 +35,7 @@ public class SongList {
 		try {
 			 FileReader fileReader = new FileReader("songcatalogue.txt");
 	            BufferedReader bufferedReader = new BufferedReader(fileReader);
-	            
+	            // run loop numSongs amount of times; read 6 lines for each song
 				for(int index = 0; index < numSongs; index++) {				
 					// array to store user info
 					String[] songInfo = new String[NUM_SONG_PROPERTIES];
@@ -103,32 +104,32 @@ public class SongList {
 			bufferedWriter.write(newSongGenre + "\n");
 			bufferedWriter.write(newSongDuration + "\n");
 			System.out.println(" Song info uploaded into songcatalogue.txt");
-			
 			// save song into HashMap
 			Song newSong = new Song(newSongID, newSongArtist, newSongTitle, newSongReleaseDate, newSongGenre, newSongDuration);
 			// put song into HashMap with songID as key
 			songList.put(newSongID, newSong);
-			// increase number of songs
+			// update numSongs and lineCount
 			numSongs ++;
-			
+			lineCount += 6;
+			System.out.println(numSongs + " " + lineCount);
 			// close bufferedWriter
 			bufferedWriter.close();
 		} catch(IOException e) {}
 	}
 	
-	public void removeSongFromFile(String removeSongID) {
-//		for(Song song : songList) {
-//			// if songID matches ID in HashMap, remove it
-//			if(removeSongID.toUpperCase().trim().equals(songList.get(removeSongID).getSongID())) {
-//				songList.remove(removeSongID);			
-//				System.out.println("The song has been removed from your playlist");
-//			} else {
-//				System.out.println("Failed to remove song. Try again");
+//	public void removeSongFromFile(String removeSongID) {
+//		Iterator<String> iterator = songList.keySet().iterator();
+//		while(iterator.hasNext()) {
+//			String key = iterator.next();
+//			if(removeSongID.toUpperCase().trim().equals(key)) {
+//				iterator.remove();
+//			//	numSongs --;
+//				System.out.println(" The song has been removed from the song list");
+//				return;
 //			}
 //		}
-//		// update numSongs
-//		numSongs --;
-	}
+//		System.out.println(" Failed to find Song ID. Try again");
+//	}
 	
 	// songList getter and setter
 	public HashMap<String, Song> getSongList() {
@@ -137,5 +138,5 @@ public class SongList {
 
 	public void setSongList(HashMap<String, Song> songList) {
 		this.songList = songList;
-	}	
+	}
 }
