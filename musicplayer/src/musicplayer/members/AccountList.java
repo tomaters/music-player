@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AccountList extends Member {
-	
+	// HashMap that contains all users' account information
 	private HashMap<String, User> accountListMap = new HashMap<String, User>();
 	// four properties: name, username, password, email
 	private final int NUM_USER_PROPERTIES = 4;
@@ -24,9 +24,9 @@ public class AccountList extends Member {
 	public void writeAccountDetails(ArrayList<String> accountInfo) {
 		FileWriter fileWriter;
 		try {
-			// if the text file already exists, write on top of it
+			// if the text file already exists
 			if(new File("accountlist.txt").exists()) {
-				// if false, will overwrite
+				// if it exists, will write on it
 				fileWriter = new FileWriter("accountlist.txt", true);
 			// if it does not exist, create a new one
 			} else { 
@@ -40,9 +40,7 @@ public class AccountList extends Member {
 			}
 			// close bufferedWriter
 			bufferedWriter.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(IOException e) {}
 	}
 
 	// returns lineCount, the number of lines in accountlist.txt
@@ -51,15 +49,13 @@ public class AccountList extends Member {
 		if(!new File("accountlist.txt").exists()) {
 			return;
 		} 
-		String file = "accountlist.txt"; // Replace with the path to your text file
+		String file = "accountlist.txt"; // replace with the path to text file
 		
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file)) ) {
 			while ((bufferedReader.readLine()) != null) {
 				lineCount++;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
+		} catch (IOException e) {} 
 	}
 
 	// take file and create accounts, to be processed at the beginning only
@@ -91,9 +87,7 @@ public class AccountList extends Member {
 			}
 			// close bufferedReader
 			bufferedReader.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {}
 	}
 	
 	// update account to HashMap
@@ -101,7 +95,7 @@ public class AccountList extends Member {
 		accountListMap.put(username, user);
 	}
 	
-	// HashMap search key function
+	// HashMap search key function for user login
 	public boolean checkLogin(String username, String password) {
 		boolean checkLogin = false;
 		// if username exists
@@ -111,6 +105,7 @@ public class AccountList extends Member {
 			// compare passwords
 			if(password.equals(keyPassword)) {
 				checkLogin = true;
+				// set user info to that of logged in user
 				User loggedInUser = accountListMap.get(username);
 				super.setName(loggedInUser.getName());
 				super.setUsername(loggedInUser.getUsername());
@@ -121,4 +116,16 @@ public class AccountList extends Member {
 		return checkLogin;
 	}
 
+	// view all users' account info (username, name, email); for Admin function 
+	public void displayAccountsList() { //아직 작업중
+//		for (User user : accountListMap.get().values()) {
+//		        System.out.printf("Song ID: [%-4s]  Artist: %-16s Song title: %-24s Release date: %-5s Genre: %-8s Duration: %-10s%n",
+//		                song.getSongID(), song.getArtist(), song.getTitle(), song.getReleaseDate(), song.getGenre(), song.getDuration());
+//		}			
+	}
+
+	public void deleteUserAccount(String accountToRemove) { // 아직 작업중
+		// CODE TO REMOVE USER ACCOUNT
+		// REMOVE FROM HASHMAP AND FROM TEXT FILE
+	}
 }

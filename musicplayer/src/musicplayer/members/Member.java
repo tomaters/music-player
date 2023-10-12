@@ -7,6 +7,7 @@ public class Member {
 	private String password;
 	private String email;
 	private boolean isLoggedIn = false; 
+
 	
 	public Member(){}
 	
@@ -65,4 +66,5 @@ public class Member {
 	public void setLoggedIn(boolean isLoggedIn) {
 		this.isLoggedIn = isLoggedIn;
 	}
+
 }

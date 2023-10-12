@@ -16,7 +16,7 @@ public class Playlist implements PlaylistInterface {
 	
 	// prints list of songs to add with their properties
 	@Override
-	public void displaySongList() throws InterruptedException {
+	public void displaySongList() {
 		// reads songcatalogue.txt file and stores songs into songList HashMap
 		_songList.readSongFile();
 		// print available song list
@@ -56,24 +56,24 @@ public class Playlist implements PlaylistInterface {
 		if(_songList.getSongList().containsKey(addSongSelection.toUpperCase().trim())) {
 			// check if song already exists in the playlist
 			if(isSongInPlaylist(addSongSelection)){
-				System.out.println("That song is already in your playlist");
+				System.out.println(" That song is already in your playlist");
 				return;
 			}
 			// create song and add to userPlaylist
 			Song songToAdd = _songList.getSongList().get(addSongSelection.toUpperCase().trim());
 			userPlaylist.add(songToAdd);
-			System.out.println("The song has been added to your playlist");
+			System.out.println(" The song has been added to your playlist");
 			// update songCount
 			songCount ++;
 		} else {
-			System.out.println("Incorrect Song ID: please try again");
+			System.out.println(" Incorrect Song ID: please try again");
 		}
 	}
 	
 	@Override
 	public void showUserPlaylist() {
 		 for (Song song : userPlaylist) {
-		        System.out.printf("Artist: %-16s Song title: %-24s Release date: %-5s Genre: %-8s Duration: %-10s%n",
+		        System.out.printf(" Artist: %-16s Song title: %-24s Release date: %-5s Genre: %-8s Duration: %-10s%n",
 		                song.getArtist(), song.getTitle(), song.getReleaseDate(), song.getGenre(), song.getDuration());
 		}	
 	}
@@ -81,18 +81,18 @@ public class Playlist implements PlaylistInterface {
 	@Override
 	public void showUserPlaylistWithID() {
 		for (Song song : userPlaylist) {
-			System.out.printf("Song ID: [%-4s]  Artist: %-16s Song title: %-24s Release date: %-5s Genre: %-8s Duration: %-10s%n",
+			System.out.printf(" Song ID: [%-4s]  Artist: %-16s Song title: %-24s Release date: %-5s Genre: %-8s Duration: %-10s%n",
 					song.getSongID(), song.getArtist(), song.getTitle(), song.getReleaseDate(), song.getGenre(), song.getDuration());
 		}	
 	}
 	
 	// adds a song to the playlist and decreases  song count
 	@Override
-	public void removeFromPlaylist(String removeSongselection) {
+	public void removeFromPlaylist(String removeSongSelection) {
 		for(int i = 0; i < userPlaylist.size(); i++) {
-			if(removeSongselection.toUpperCase().trim().equals(userPlaylist.get(i).getSongID())) {
+			if(removeSongSelection.toUpperCase().trim().equals(userPlaylist.get(i).getSongID())) {
 				userPlaylist.remove(i);			
-				System.out.println("The song has been removed from your playlist");
+				System.out.println(" The song has been removed from your playlist");
 			}
 		}
 		// update songCount
