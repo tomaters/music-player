@@ -111,7 +111,6 @@ public class SongList {
 			// update numSongs and lineCount
 			numSongs ++;
 			lineCount += 6;
-			System.out.println(numSongs + " " + lineCount);
 			// close bufferedWriter
 			bufferedWriter.close();
 		} catch(IOException e) {}

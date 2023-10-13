@@ -20,9 +20,6 @@ public class MusicPlayerMain {
 	
 	// scanner to input text
 	public static Scanner scan = new Scanner(System.in);
-
-	// thread to implement pauses
-	static Thread thread = new Thread();
 	
 	// call other classes
 	static User user;
